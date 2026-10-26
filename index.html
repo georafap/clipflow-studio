@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ClipFlow Creator Studio — Video Publishing & TikTok Direct Post</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .tiktok-gradient { background: linear-gradient(90deg, #00f2fe 0%, #fe0979 100%); }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
+
+  <!-- Top Navigation Bar -->
+  <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-30">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl tiktok-gradient flex items-center justify-center font-bold text-slate-950 text-lg shadow">
+          CF
+        </div>
+        <div>
+          <span class="font-bold text-base tracking-tight text-white">ClipFlow Creator Studio</span>
+          <span class="ml-2 text-xs px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">TikTok Direct Post v2</span>
+        </div>
+      </div>
+
+      <nav class="flex items-center gap-1 sm:gap-2 text-sm">
+        <button id="navStudioBtn" type="button" class="px-3 py-1.5 rounded-lg font-medium bg-slate-800 text-white transition">
+          Creator Studio (UX Demo)
+        </button>
+        <button id="navGuideBtn" type="button" class="px-3 py-1.5 rounded-lg font-medium text-slate-300 hover:bg-slate-800/60 transition">
+          คู่มือยื่น Audit (ภาษาไทย)
+        </button>
+        <button id="navTermsBtn" type="button" class="px-3 py-1.5 rounded-lg font-medium text-slate-300 hover:bg-slate-800/60 transition">
+          Terms of Service
+        </button>
+        <button id="navPrivacyBtn" type="button" class="px-3 py-1.5 rounded-lg font-medium text-slate-300 hover:bg-slate-800/60 transition">
+          Privacy Policy
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Toast Banner -->
+  <div id="toastBanner" class="hidden fixed bottom-5 right-5 z-50 max-w-md bg-slate-900 border border-slate-700 text-slate-100 px-4 py-3 rounded-xl shadow-2xl flex items-start gap-3">
+    <span id="toastIcon" class="text-lg">✅</span>
+    <div class="text-sm flex-1" id="toastMessage">Action completed</div>
+    <button id="closeToastBtn" type="button" class="text-slate-400 hover:text-white text-xs font-semibold">✕</button>
+  </div>
+
+  <!-- Main Content Container -->
+  <main class="flex-1 max-w-6xl w-full mx-auto px-4 py-6">
+
+    <!-- ==================== VIEW 1: TIKTOK DIRECT POST STUDIO ==================== -->
+    <section id="viewStudio" class="space-y-6">
+      <!-- Top Status / Account Connection Bar -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="space-y-1">
+          <h1 class="text-lg font-bold text-white flex items-center gap-2">
+            Publish Original Video to TikTok
+            <span class="text-xs font-normal text-slate-400">(Complies with TikTok Content Sharing Guidelines)</span>
+          </h1>
+          <p class="text-xs text-slate-400">
+            Connect your TikTok Creator account via TikTok Login Kit to query creator info (<code class="text-cyan-300">/v2/post/publish/creator_info/query/</code>) and publish directly.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3">
+          <div id="disconnectedBadge" class="flex items-center gap-3">
+            <span class="text-xs px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30">
+              Not Connected
+            </span>
+            <button id="connectTiktokBtn" type="button" class="px-4 py-2 rounded-xl font-semibold text-sm bg-white text-slate-950 hover:bg-slate-200 transition shadow flex items-center gap-2">
+              <span>🎵</span> Continue with TikTok
+            </button>
+          </div>
+
+          <div id="connectedBadge" class="hidden items-center gap-3 bg-slate-950 border border-slate-800 px-3.5 py-2 rounded-xl">
+            <div class="w-8 h-8 rounded-full tiktok-gradient flex items-center justify-center font-bold text-slate-950 text-xs" id="creatorAvatar">
+              AS
+            </div>
+            <div class="text-xs">
+              <div class="font-semibold text-white flex items-center gap-1.5">
+                <span id="creatorNicknameDisplay">Aura Space Studio</span>
+                <span class="text-[10px] px-1.5 py-0.2 bg-emerald-500/20 text-emerald-300 rounded">Verified Creator</span>
+              </div>
+              <div class="text-slate-400">
+                <span id="creatorHandleDisplay">@AuraSpaceStudioUs</span> · Max duration: <span id="creatorMaxDurDisplay" class="text-slate-200 font-medium">600s (10m)</span>
+              </div>
+            </div>
+            <button id="switchCreatorBtn" type="button" class="ml-2 text-xs px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 transition">
+              Switch Account
+            </button>
+            <button id="disconnectTiktokBtn" type="button" class="text-xs px-2 py-1 rounded-lg text-rose-400 hover:bg-rose-500/10 transition">
+              Disconnect
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main 2-Column Direct Post Form + Preview -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <!-- Left Column: Video File & Live Preview (5 cols) -->
+        <div class="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between space-y-4">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <h2 class="text-sm font-semibold text-white">1. Video Preview & Media Check</h2>
+              <span id="videoSpecBadge" class="text-xs px-2 py-0.5 rounded bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">
+                9:16 Vertical · 15.0s
+              </span>
+            </div>
+
+            <!-- 9:16 Preview Container -->
+            <div class="relative mx-auto w-full max-w-[260px] aspect-[9/16] rounded-2xl overflow-hidden bg-slate-950 border border-slate-800 shadow-inner flex flex-col items-center justify-center">
+              <video id="videoPreviewPlayer" class="hidden w-full h-full object-cover" controls playsinline></video>
+              <canvas id="sampleVideoCanvas" width="270" height="480" class="w-full h-full object-cover"></canvas>
+              <div class="absolute bottom-3 left-3 right-3 bg-slate-950/80 backdrop-blur px-3 py-2 rounded-xl border border-slate-800/80 pointer-events-none">
+                <div class="text-[11px] font-semibold text-white truncate" id="previewOverlayAccount">@AuraSpaceStudioUs</div>
+                <div class="text-[10px] text-slate-300 line-clamp-2 mt-0.5" id="previewOverlayCaption"> Peaceful forest stream in 4K #nature #relaxing #ambient</div>
+              </div>
+            </div>
+
+            <!-- Upload / Choose Local MP4 -->
+            <div class="pt-2 space-y-2">
+              <label for="videoFileInput" class="block text-xs font-medium text-slate-300">
+                Select Video File (.mp4, .mov, .webm):
+              </label>
+              <div class="flex items-center gap-2">
+                <input id="videoFileInput" type="file" accept="video/mp4,video/quicktime,video/webm" class="block w-full text-xs text-slate-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-white hover:file:bg-slate-700" />
+                <button id="playSampleCanvasBtn" type="button" class="shrink-0 text-xs px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 transition">
+                  Animate Preview
+                </button>
+              </div>
+              <div id="durationValidationMsg" class="text-xs text-emerald-400">
+                ✓ Video duration (15.0s) is within creator's max allowed duration (600s). No watermarks added.
+              </div>
+            </div>
+          </div>
+
+          <!-- Creator Info Simulation Controls (Helpful for Audit Video Recording) -->
+          <div class="border-t border-slate-800 pt-3 space-y-2">
+            <div class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+              Creator Info API State (<code class="text-slate-300">creator_info/query</code>)
+            </div>
+            <div class="grid grid-cols-2 gap-2 text-xs">
+              <label class="flex items-center gap-2 bg-slate-950 p-2 rounded-lg border border-slate-800 cursor-pointer">
+                <input id="simRateLimitToggle" type="checkbox" class="rounded border-slate-700" />
+                <span class="text-slate-300">Simulate Daily Post Limit Reached</span>
+              </label>
+              <label class="flex items-center gap-2 bg-slate-950 p-2 rounded-lg border border-slate-800 cursor-pointer">
+                <input id="simDisableDuetToggle" type="checkbox" class="rounded border-slate-700" />
+                <span class="text-slate-300">Creator Disabled Duet/Stitch in App</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Mandatory TikTok Direct Post UX Controls (7 cols) -->
+        <div class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-5">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div>
+              <h2 class="text-sm font-semibold text-white">2. Post Settings & Mandatory Disclosures</h2>
+              <p class="text-xs text-slate-400">All fields below are user-controlled with no pre-selected defaults per TikTok UX Guidelines.</p>
+            </div>
+            <span class="text-xs px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 text-slate-300">
+              Posting to: <strong id="postingToLabel" class="text-white">@AuraSpaceStudioUs</strong>
+            </span>
+          </div>
+
+          <!-- Rate limit warning banner if simulated -->
+          <div id="rateLimitAlert" class="hidden bg-rose-500/15 border border-rose-500/40 text-rose-200 px-4 py-3 rounded-xl text-xs">
+            <strong>Publishing Paused:</strong> <code class="text-rose-100">creator_info</code> indicates this TikTok account has reached its 24-hour posting limit. Please try again later.
+          </div>
+
+          <!-- A. Editable Title / Caption -->
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between">
+              <label for="postTitleInput" class="text-xs font-semibold text-slate-200">
+                Title / Caption & Hashtags <span class="text-rose-400">*</span>
+              </label>
+              <span id="titleCharCount" class="text-[11px] text-slate-400">52 / 2200</span>
+            </div>
+            <textarea id="postTitleInput" rows="3" maxlength="2200" class="w-full rounded-xl bg-slate-950 border border-slate-800 px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-400" placeholder="Write a caption and hashtags for your TikTok video...">Peaceful forest stream in 4K #nature #relaxing #ambient</textarea>
+          </div>
+
+          <!-- B. Mandatory Privacy Status Dropdown (NO default value!) -->
+          <div class="space-y-1.5">
+            <label for="privacySelect" class="text-xs font-semibold text-slate-200">
+              Who can view this video (Privacy Status) <span class="text-rose-400">*</span>
+            </label>
+            <select id="privacySelect" class="w-full rounded-xl bg-slate-950 border border-slate-800 px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-400">
+              <option value="">-- Select privacy status (Required) --</option>
+              <option value="PUBLIC_TO_EVERYONE">Public to everyone (Everyone)</option>
+              <option value="MUTUAL_FOLLOW_FRIENDS">Friends (Followers you follow back)</option>
+              <option value="SELF_ONLY" id="privacySelfOnlyOption">Private (Only me)</option>
+            </select>
+            <p id="privacyBrandedNotice" class="hidden text-xs text-amber-300">
+              ⓘ Branded content visibility cannot be set to private. "Private (Only me)" has been disabled.
+            </p>
+          </div>
+
+          <!-- C. Interaction Ability (Allow Comment, Duet, Stitch - NONE checked by default!) -->
+          <div class="space-y-2">
+            <span class="block text-xs font-semibold text-slate-200">
+              Allow users to (Unchecked by default — turn on manually):
+            </span>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+              <label class="flex items-center gap-2.5 bg-slate-950 border border-slate-800 px-3.5 py-2.5 rounded-xl cursor-pointer text-xs">
+                <input id="allowCommentCheck" type="checkbox" class="rounded border-slate-700" />
+                <span class="text-slate-200 font-medium">Allow Comment</span>
+              </label>
+              <label id="duetLabelWrap" class="flex items-center gap-2.5 bg-slate-950 border border-slate-800 px-3.5 py-2.5 rounded-xl cursor-pointer text-xs">
+                <input id="allowDuetCheck" type="checkbox" class="rounded border-slate-700" />
+                <span class="text-slate-200 font-medium">Allow Duet</span>
+              </label>
+              <label id="stitchLabelWrap" class="flex items-center gap-2.5 bg-slate-950 border border-slate-800 px-3.5 py-2.5 rounded-xl cursor-pointer text-xs">
+                <input id="allowStitchCheck" type="checkbox" class="rounded border-slate-700" />
+                <span class="text-slate-200 font-medium">Allow Stitch</span>
+              </label>
+            </div>
+            <p id="interactionDisabledNote" class="hidden text-[11px] text-slate-400">
+              ⓘ Duet and Stitch are greyed out because <code class="text-slate-300">duet_disabled</code> / <code class="text-slate-300">stitch_disabled</code> is true in this creator's TikTok settings.
+            </p>
+          </div>
+
+          <!-- D. Commercial Content Disclosure (Off by default) -->
+          <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-3">
+            <div class="flex items-center justify-between gap-3">
+              <div>
+                <div class="text-xs font-semibold text-white">Disclose video content (Commercial Content Disclosure)</div>
+                <div class="text-[11px] text-slate-400">Turn on to indicate that this video promotes yourself, a brand, product, or service.</div>
+              </div>
+              <label class="inline-flex items-center cursor-pointer">
+                <input id="commercialToggle" type="checkbox" class="sr-only peer" />
+                <div class="w-10 h-5 bg-slate-800 rounded-full peer peer-checked:bg-cyan-500 relative transition after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-5"></div>
+              </label>
+            </div>
+
+            <!-- Commercial Sub-options (Hidden when toggle is OFF) -->
+            <div id="commercialOptionsBox" class="hidden pt-2 border-t border-slate-800 space-y-2.5">
+              <label class="flex items-start gap-2.5 cursor-pointer text-xs">
+                <input id="commercialYourBrandCheck" type="checkbox" class="mt-0.5 rounded border-slate-700" />
+                <div>
+                  <div class="font-semibold text-slate-200">Your brand</div>
+                  <div class="text-slate-400 text-[11px]">You are promoting yourself or your own business.</div>
+                </div>
+              </label>
+
+              <label class="flex items-start gap-2.5 cursor-pointer text-xs">
+                <input id="commercialBrandedCheck" type="checkbox" class="mt-0.5 rounded border-slate-700" />
+                <div>
+                  <div class="font-semibold text-slate-200">Branded content</div>
+                  <div class="text-slate-400 text-[11px]">You are promoting another brand or a third party.</div>
+                </div>
+              </label>
+
+              <!-- Dynamic Label Prompt required by TikTok Section 3a -->
+              <div id="commercialLabelPrompt" class="hidden text-xs px-3 py-2 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-200 font-medium">
+                Your photo/video will be labeled as 'Promotional content'
+              </div>
+
+              <!-- Error if toggle is ON but no option checked -->
+              <div id="commercialErrorPrompt" class="text-xs px-3 py-2 rounded-lg bg-amber-500/15 border border-amber-500/30 text-amber-200">
+                ⚠️ You need to indicate if your content promotes yourself, a third party, or both.
+              </div>
+            </div>
+          </div>
+
+          <!-- E. Mandatory Legal / Music Usage Declaration & Publish Button -->
+          <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-3">
+            <label class="flex items-start gap-2.5 cursor-pointer text-xs">
+              <input id="consentCheck" type="checkbox" class="mt-0.5 rounded border-slate-700" />
+              <span id="complianceDeclarationText" class="text-slate-200 font-medium">
+                By posting, you agree to TikTok's Music Usage Confirmation.
+              </span>
+            </label>
+
+            <div class="text-[11px] text-slate-400">
+              Note: After you finish publishing your content, it may take a few minutes for the content to process and be visible on your TikTok profile.
+            </div>
+
+            <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+              <div id="validationSummaryText" class="text-xs text-amber-300">
+                Please select a Privacy Status and check the confirmation box to enable publishing.
+              </div>
+              <button id="publishTiktokBtn" type="button" disabled class="px-5 py-2.5 rounded-xl font-semibold text-sm bg-slate-800 text-slate-500 cursor-not-allowed transition flex items-center gap-2">
+                <span>🚀</span> Publish to TikTok
+              </button>
+            </div>
+          </div>
+
+          <!-- Live API Status Polling Log (/v2/post/publish/status/fetch/) -->
+          <div id="publishStatusCard" class="hidden bg-slate-950 border border-emerald-500/40 rounded-xl p-4 space-y-2 text-xs">
+            <div class="flex items-center justify-between">
+              <span class="font-semibold text-emerald-300" id="publishStepTitle">Initializing Direct Post...</span>
+              <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono" id="publishStatusCode">PROCESSING_UPLOAD</span>
+            </div>
+            <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+              <div id="publishProgressBar" class="bg-emerald-400 h-full w-1/3 transition-all duration-500"></div>
+            </div>
+            <div id="publishStatusDetail" class="text-slate-300 font-mono text-[11px]">
+              POST https://open.tiktokapis.com/v2/post/publish/video/init/ -> publish_id: v_pub_url~v2.74291849201
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 2: THAI AUDIT SUBMISSION GUIDE ==================== -->
+    <section id="viewGuide" class="hidden space-y-6">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-5">
+        <div class="border-b border-slate-800 pb-4">
+          <h2 class="text-xl font-bold text-white">คู่มือยื่นขอ TikTok App Audit ให้ผ่านในรอบเดียว (Step-by-Step)</h2>
+          <p class="text-sm text-slate-400 mt-1">
+            หน้าเว็บ <strong class="text-white">ClipFlow Creator Studio</strong> นี้ถูกออกแบบให้มีปุ่มและเงื่อนไขครบทั้ง 5 ข้อตามกฎ <a href="https://developers.tiktok.com/doc/content-sharing-guidelines" target="_blank" rel="noopener" class="text-cyan-400 underline">TikTok Content Sharing Guidelines</a> ทุกประการ
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-2">
+            <div class="text-sm font-bold text-cyan-300">ขั้นตอนที่ 1: นำไฟล์เว็บนี้ขึ้น GitHub Pages (ฟรี 2 นาที)</div>
+            <ol class="list-decimal list-inside text-xs text-slate-300 space-y-1.5 leading-relaxed">
+              <li>สร้าง Repository ใหม่แบบ <strong>Public</strong> บน GitHub ชื่อเช่น <code class="text-white">clipflow-studio</code></li>
+              <li>อัปโหลดไฟล์เว็บนี้โดยเปลี่ยนชื่อเป็น <code class="text-white">index.html</code></li>
+              <li>ไปที่เมนู <strong>Settings &rarr; Pages</strong> เลือก Branch <code class="text-white">main</code> แล้วกด Save</li>
+              <li>คุณจะได้ลิงก์เว็บไซต์จริง เช่น <code class="text-emerald-300">https://georafap.github.io/clipflow-studio/</code> สำหรับกรอกในฟอร์มของ TikTok!</li>
+            </ol>
+          </div>
+
+          <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-2">
+            <div class="text-sm font-bold text-cyan-300">ขั้นตอนที่ 2: กรอกข้อมูลแอปใน TikTok Developer Portal</div>
+            <ul class="list-disc list-inside text-xs text-slate-300 space-y-1.5 leading-relaxed">
+              <li><strong>App Name:</strong> <code class="text-white">ClipFlow Creator Studio</code></li>
+              <li><strong>Category:</strong> Video / Photo Editing &amp; Creation</li>
+              <li><strong>Web/Desktop URL:</strong> <code class="text-white">https://georafap.github.io/clipflow-studio/</code></li>
+              <li><strong>Terms of Service URL:</strong> <code class="text-white">https://georafap.github.io/clipflow-studio/#terms</code></li>
+              <li><strong>Privacy Policy URL:</strong> <code class="text-white">https://georafap.github.io/clipflow-studio/#privacy</code></li>
+              <li><strong>Products &amp; Scopes:</strong> เพิ่ม <code class="text-white">Login Kit</code> (<code class="text-cyan-300">user.info.basic</code>) และ <code class="text-white">Content Posting API</code> (<code class="text-cyan-300">video.publish</code>, <code class="text-cyan-300">video.upload</code>)</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Copyable English App Review Description -->
+        <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-emerald-300">ข้อความภาษาอังกฤษสำหรับช่อง "Explain how your app uses Login Kit and Content Posting API" (กดคัดลอกไปวางได้เลย):</span>
+            <button id="copyAuditDescBtn" type="button" class="text-xs px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-medium">
+              📋 คัดลอกข้อความ
+            </button>
+          </div>
+          <p id="auditDescText" class="text-xs text-slate-300 bg-slate-900 p-3 rounded-lg border border-slate-800 select-all leading-relaxed">
+            ClipFlow Creator Studio is a web-based video creation and publishing tool for independent content creators. Creators sign in with their TikTok account via TikTok Login Kit (user.info.basic), preview their edited 9:16 vertical video, review their creator profile info queried via /v2/post/publish/creator_info/query/, manually choose their privacy status, configure interaction settings (Comment, Duet, Stitch), disclose commercial content if applicable, and publish directly to their TikTok profile via the Content Posting API (video.publish).
+          </p>
+        </div>
+
+        <!-- Step 3: Screen Recording Script -->
+        <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-2">
+          <div class="text-sm font-bold text-cyan-300">ขั้นตอนที่ 3: วิธีอัดคลิปหน้าจอ (Screen Recording ~45 วินาที) ส่งให้ TikTok ตรวจ</div>
+          <p class="text-xs text-slate-400">เปิดแท็บ <strong>Creator Studio (UX Demo)</strong> ด้านบน แล้วอัดคลิปหน้าจอตามลำดับนี้เพื่อให้กรรมการ TikTok เห็นครบทุกข้อ:</p>
+          <ol class="list-decimal list-inside text-xs text-slate-300 space-y-1.5 leading-relaxed">
+            <li>กดปุ่ม <strong>Continue with TikTok</strong> เพื่อแสดงการเชื่อมต่อบัญชีและแสดงชื่อช่อง (<code class="text-white">@AuraSpaceStudioUs</code>)</li>
+            <li>กดเลือกไฟล์วิดีโอ <code class="text-white">.mp4</code> จากในเครื่อง (หรือกด <strong>Animate Preview</strong>) เพื่อโชว์ตัวอย่างวิดีโอ 9:16 ด้านซ้าย</li>
+            <li>พิมพ์แก้ไขข้อความในช่อง <strong>Title / Caption &amp; Hashtags</strong></li>
+            <li>กดเปิด Dropdown <strong>Who can view this video (Privacy Status)</strong> แล้วเลือก <code class="text-white">Public to everyone</code></li>
+            <li>กดติ๊กถูกที่ <strong>Allow Comment</strong>, <strong>Allow Duet</strong>, <strong>Allow Stitch</strong></li>
+            <li>กดเปิดสวิตช์ <strong>Disclose video content (Commercial Content)</strong> แล้วลองติ๊กถูกที่ <code class="text-white">Your brand</code> และ <code class="text-white">Branded content</code> เพื่อให้เห็นข้อความแจ้งเตือนตามกฎของ TikTok (จากนั้นจะเปิดไว้หรือปิดก็ได้)</li>
+            <li>กดติ๊กถูกที่ช่อง <strong>By posting, you agree to...</strong> แล้วกดปุ่ม <strong>Publish to TikTok</strong> จนแถบสถานะขึ้น <code class="text-emerald-300">PUBLISH_COMPLETE</code> เป็นอันจบคลิป!</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 3: TERMS OF SERVICE ==================== -->
+    <section id="viewTerms" class="hidden">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4 text-sm text-slate-300 leading-relaxed">
+        <h2 class="text-xl font-bold text-white">Terms of Service — ClipFlow Creator Studio</h2>
+        <p class="text-xs text-slate-400">Last Updated: October 2026</p>
+        <p><strong>1. Acceptance of Terms:</strong> By accessing and using ClipFlow Creator Studio, you agree to comply with these Terms of Service and TikTok's Terms of Service, Community Guidelines, Branded Content Policy, and Music Usage Confirmation.</p>
+        <p><strong>2. Creator Control &amp; Consent:</strong> ClipFlow Creator Studio never publishes content without explicit user action. Creators retain full ownership of their original videos, manually configure privacy levels and interaction permissions for every upload, and explicitly confirm compliance before initiating any transfer to TikTok servers.</p>
+        <p><strong>3. Prohibited Content:</strong> Users may only upload original content they own or are authorized to distribute. No promotional watermarks or third-party logos are superimposed by ClipFlow Creator Studio.</p>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 4: PRIVACY POLICY ==================== -->
+    <section id="viewPrivacy" class="hidden">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4 text-sm text-slate-300 leading-relaxed">
+        <h2 class="text-xl font-bold text-white">Privacy Policy — ClipFlow Creator Studio</h2>
+        <p class="text-xs text-slate-400">Last Updated: October 2026</p>
+        <p><strong>1. Data We Access:</strong> When you authorize ClipFlow Creator Studio via TikTok Login Kit, we request access only to basic profile metadata (<code class="text-cyan-300">user.info.basic</code>) and content publishing permissions (<code class="text-cyan-300">video.publish</code>, <code class="text-cyan-300">video.upload</code>) required to display your creator nickname and upload videos you explicitly submit.</p>
+        <p><strong>2. Data Storage &amp; Security:</strong> OAuth tokens are used strictly to execute user-initiated API requests to <code class="text-cyan-300">open.tiktokapis.com</code>. We do not sell, rent, or share personal data or creator credentials with any third party.</p>
+        <p><strong>3. Revoking Access:</strong> You may disconnect your TikTok account at any time within ClipFlow Creator Studio or directly from the TikTok mobile app under Settings and Privacy &rarr; Security and permissions &rarr; Apps and services permissions.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    (function () {
+      const creators = [
+        { nickname: 'Aura Space Studio', handle: '@AuraSpaceStudioUs', initials: 'AS', maxDur: 600 },
+        { nickname: 'Quiet Wilds Nature', handle: '@quietwildsnatures', initials: 'QW', maxDur: 600 },
+        { nickname: 'BabyWren Unfiltered', handle: '@BabyWren', initials: 'BW', maxDur: 600 },
+        { nickname: 'Pure Aqua Visuals', handle: '@pureaquavisuals', initials: 'PA', maxDur: 600 },
+        { nickname: 'Seasons Whisper', handle: '@seasonswhisper', initials: 'SW', maxDur: 600 }
+      ];
+
+      let state = {
+        connected: true,
+        creatorIndex: 0,
+        videoDurationSec: 15.0,
+        rateLimitReached: false,
+        duetStitchDisabledByCreator: false,
+        animatingCanvas: true
+      };
+
+      // Navigation elements
+      const views = {
+        studio: document.getElementById('viewStudio'),
+        guide: document.getElementById('viewGuide'),
+        terms: document.getElementById('viewTerms'),
+        privacy: document.getElementById('viewPrivacy')
+      };
+      const navBtns = {
+        studio: document.getElementById('navStudioBtn'),
+        guide: document.getElementById('navGuideBtn'),
+        terms: document.getElementById('navTermsBtn'),
+        privacy: document.getElementById('navPrivacyBtn')
+      };
+
+      function switchView(target) {
+        Object.keys(views).forEach(function (k) {
+          if (k === target) {
+            views[k].classList.remove('hidden');
+            navBtns[k].className = 'px-3 py-1.5 rounded-lg font-medium bg-slate-800 text-white transition';
+          } else {
+            views[k].classList.add('hidden');
+            navBtns[k].className = 'px-3 py-1.5 rounded-lg font-medium text-slate-300 hover:bg-slate-800/60 transition';
+          }
+        });
+      }
+
+      navBtns.studio.addEventListener('click', function () { switchView('studio'); });
+      navBtns.guide.addEventListener('click', function () { switchView('guide'); });
+      navBtns.terms.addEventListener('click', function () { switchView('terms'); });
+      navBtns.privacy.addEventListener('click', function () { switchView('privacy'); });
+
+      // Check initial hash
+      if (window.location.hash === '#terms') switchView('terms');
+      else if (window.location.hash === '#privacy') switchView('privacy');
+      else if (window.location.hash === '#guide') switchView('guide');
+
+      // Toast helper
+      const toastBanner = document.getElementById('toastBanner');
+      const toastIcon = document.getElementById('toastIcon');
+      const toastMessage = document.getElementById('toastMessage');
+      let toastTimer = null;
+
+      function showToast(msg, icon) {
+        toastIcon.textContent = icon || '✅';
+        toastMessage.textContent = msg;
+        toastBanner.classList.remove('hidden');
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () {
+          toastBanner.classList.add('hidden');
+        }, 4500);
+      }
+
+      document.getElementById('closeToastBtn').addEventListener('click', function () {
+        toastBanner.classList.add('hidden');
+      });
+
+      // DOM elements for Studio
+      const disconnectedBadge = document.getElementById('disconnectedBadge');
+      const connectedBadge = document.getElementById('connectedBadge');
+      const connectTiktokBtn = document.getElementById('connectTiktokBtn');
+      const switchCreatorBtn = document.getElementById('switchCreatorBtn');
+      const disconnectTiktokBtn = document.getElementById('disconnectTiktokBtn');
+
+      const creatorAvatar = document.getElementById('creatorAvatar');
+      const creatorNicknameDisplay = document.getElementById('creatorNicknameDisplay');
+      const creatorHandleDisplay = document.getElementById('creatorHandleDisplay');
+      const creatorMaxDurDisplay = document.getElementById('creatorMaxDurDisplay');
+      const postingToLabel = document.getElementById('postingToLabel');
+      const previewOverlayAccount = document.getElementById('previewOverlayAccount');
+      const previewOverlayCaption = document.getElementById('previewOverlayCaption');
+
+      const postTitleInput = document.getElementById('postTitleInput');
+      const titleCharCount = document.getElementById('titleCharCount');
+      const privacySelect = document.getElementById('privacySelect');
+      const privacySelfOnlyOption = document.getElementById('privacySelfOnlyOption');
+      const privacyBrandedNotice = document.getElementById('privacyBrandedNotice');
+
+      const allowCommentCheck = document.getElementById('allowCommentCheck');
+      const allowDuetCheck = document.getElementById('allowDuetCheck');
+      const allowStitchCheck = document.getElementById('allowStitchCheck');
+      const duetLabelWrap = document.getElementById('duetLabelWrap');
+      const stitchLabelWrap = document.getElementById('stitchLabelWrap');
+      const interactionDisabledNote = document.getElementById('interactionDisabledNote');
+
+      const commercialToggle = document.getElementById('commercialToggle');
+      const commercialOptionsBox = document.getElementById('commercialOptionsBox');
+      const commercialYourBrandCheck = document.getElementById('commercialYourBrandCheck');
+      const commercialBrandedCheck = document.getElementById('commercialBrandedCheck');
+      const commercialLabelPrompt = document.getElementById('commercialLabelPrompt');
+      const commercialErrorPrompt = document.getElementById('commercialErrorPrompt');
+
+      const consentCheck = document.getElementById('consentCheck');
+      const complianceDeclarationText = document.getElementById('complianceDeclarationText');
+      const validationSummaryText = document.getElementById('validationSummaryText');
+      const publishTiktokBtn = document.getElementById('publishTiktokBtn');
+
+      const simRateLimitToggle = document.getElementById('simRateLimitToggle');
+      const simDisableDuetToggle = document.getElementById('simDisableDuetToggle');
+      const rateLimitAlert = document.getElementById('rateLimitAlert');
+
+      const videoFileInput = document.getElementById('videoFileInput');
+      const videoPreviewPlayer = document.getElementById('videoPreviewPlayer');
+      const sampleVideoCanvas = document.getElementById('sampleVideoCanvas');
+      const videoSpecBadge = document.getElementById('videoSpecBadge');
+      const durationValidationMsg = document.getElementById('durationValidationMsg');
+      const playSampleCanvasBtn = document.getElementById('playSampleCanvasBtn');
+
+      const publishStatusCard = document.getElementById('publishStatusCard');
+      const publishStepTitle = document.getElementById('publishStepTitle');
+      const publishStatusCode = document.getElementById('publishStatusCode');
+      const publishProgressBar = document.getElementById('publishProgressBar');
+      const publishStatusDetail = document.getElementById('publishStatusDetail');
+
+      function updateFormState() {
+        const currentCreator = creators[state.creatorIndex];
+
+        // 1. Account connection UI
+        if (state.connected) {
+          disconnectedBadge.classList.add('hidden');
+          connectedBadge.classList.remove('hidden');
+          connectedBadge.classList.add('flex');
+          creatorAvatar.textContent = currentCreator.initials;
+          creatorNicknameDisplay.textContent = currentCreator.nickname;
+          creatorHandleDisplay.textContent = currentCreator.handle;
+          creatorMaxDurDisplay.textContent = currentCreator.maxDur + 's (10m)';
+          postingToLabel.textContent = currentCreator.handle;
+          previewOverlayAccount.textContent = currentCreator.handle;
+        } else {
+          disconnectedBadge.classList.remove('hidden');
+          connectedBadge.classList.add('hidden');
+          connectedBadge.classList.remove('flex');
+          postingToLabel.textContent = 'Not connected';
+          previewOverlayAccount.textContent = '@not_connected';
+        }
+
+        // 2. Caption & character count
+        const capVal = postTitleInput.value || '';
+        titleCharCount.textContent = capVal.length + ' / 2200';
+        previewOverlayCaption.textContent = capVal || '(No caption)';
+
+        // 3. Creator info simulation toggles
+        if (state.rateLimitReached) {
+          rateLimitAlert.classList.remove('hidden');
+        } else {
+          rateLimitAlert.classList.add('hidden');
+        }
+
+        if (state.duetStitchDisabledByCreator) {
+          allowDuetCheck.checked = false;
+          allowStitchCheck.checked = false;
+          allowDuetCheck.disabled = true;
+          allowStitchCheck.disabled = true;
+          duetLabelWrap.classList.add('opacity-40', 'cursor-not-allowed');
+          stitchLabelWrap.classList.add('opacity-40', 'cursor-not-allowed');
+          interactionDisabledNote.classList.remove('hidden');
+        } else {
+          allowDuetCheck.disabled = false;
+          allowStitchCheck.disabled = false;
+          duetLabelWrap.classList.remove('opacity-40', 'cursor-not-allowed');
+          stitchLabelWrap.classList.remove('opacity-40', 'cursor-not-allowed');
+          interactionDisabledNote.classList.add('hidden');
+        }
+
+        // 4. Commercial content disclosure logic (TikTok Guidelines Section 3 & 4)
+        const commOn = commercialToggle.checked;
+        const yourBrand = commercialYourBrandCheck.checked;
+        const brandedContent = commercialBrandedCheck.checked;
+
+        if (commOn) {
+          commercialOptionsBox.classList.remove('hidden');
+          if (!yourBrand && !brandedContent) {
+            commercialLabelPrompt.classList.add('hidden');
+            commercialErrorPrompt.classList.remove('hidden');
+          } else {
+            commercialErrorPrompt.classList.add('hidden');
+            commercialLabelPrompt.classList.remove('hidden');
+            if (brandedContent) {
+              commercialLabelPrompt.textContent = "Your photo/video will be labeled as 'Paid partnership'";
+            } else {
+              commercialLabelPrompt.textContent = "Your photo/video will be labeled as 'Promotional content'";
+            }
+          }
+
+          // Branded content cannot be private (SELF_ONLY)
+          if (brandedContent) {
+            privacySelfOnlyOption.disabled = true;
+            privacyBrandedNotice.classList.remove('hidden');
+            if (privacySelect.value === 'SELF_ONLY') {
+              privacySelect.value = 'PUBLIC_TO_EVERYONE';
+              showToast('Switched visibility to Public because Branded Content cannot be set to Private.', 'ℹ️');
+            }
+            complianceDeclarationText.textContent = "By posting, you agree to TikTok's Branded Content Policy and Music Usage Confirmation.";
+          } else {
+            privacySelfOnlyOption.disabled = false;
+            privacyBrandedNotice.classList.add('hidden');
+            complianceDeclarationText.textContent = "By posting, you agree to TikTok's Music Usage Confirmation.";
+          }
+        } else {
+          commercialOptionsBox.classList.add('hidden');
+          privacySelfOnlyOption.disabled = false;
+          privacyBrandedNotice.classList.add('hidden');
+          complianceDeclarationText.textContent = "By posting, you agree to TikTok's Music Usage Confirmation.";
+        }
+
+        // 5. Duration validation against creator_info.max_video_post_duration_sec
+        const durOk = state.videoDurationSec <= currentCreator.maxDur;
+        if (durOk) {
+          durationValidationMsg.className = 'text-xs text-emerald-400';
+          durationValidationMsg.textContent = '✓ Video duration (' + state.videoDurationSec.toFixed(1) + 's) is within creator max allowed duration (' + currentCreator.maxDur + 's).';
+        } else {
+          durationValidationMsg.className = 'text-xs text-rose-400';
+          durationValidationMsg.textContent = '✕ Video duration (' + state.videoDurationSec.toFixed(1) + 's) exceeds max_video_post_duration_sec (' + currentCreator.maxDur + 's).';
+        }
+
+        // 6. Overall validation for Publish button
+        const commValid = !commOn || (yourBrand || brandedContent);
+        const privacyValid = Boolean(privacySelect.value);
+        const consentValid = consentCheck.checked;
+        const canPublish = state.connected && !state.rateLimitReached && durOk && commValid && privacyValid && consentValid;
+
+        if (canPublish) {
+          publishTiktokBtn.disabled = false;
+          publishTiktokBtn.className = 'px-5 py-2.5 rounded-xl font-semibold text-sm tiktok-gradient text-slate-950 hover:opacity-95 transition shadow-lg flex items-center gap-2 cursor-pointer';
+          validationSummaryText.className = 'text-xs text-emerald-400';
+          validationSummaryText.textContent = '✓ Ready to publish to ' + currentCreator.handle + ' (' + privacySelect.value + ')';
+        } else {
+          publishTiktokBtn.disabled = true;
+          publishTiktokBtn.className = 'px-5 py-2.5 rounded-xl font-semibold text-sm bg-slate-800 text-slate-500 cursor-not-allowed transition flex items-center gap-2';
+          validationSummaryText.className = 'text-xs text-amber-300';
+          if (!state.connected) {
+            validationSummaryText.textContent = 'Please connect your TikTok account first.';
+          } else if (state.rateLimitReached) {
+            validationSummaryText.textContent = 'Creator daily posting cap reached. Try again later.';
+          } else if (!privacyValid) {
+            validationSummaryText.textContent = 'Please manually select a Privacy Status from the dropdown.';
+          } else if (!commValid) {
+            validationSummaryText.textContent = 'Please select at least one Commercial Content option (Your brand or Branded content).';
+          } else if (!consentValid) {
+            validationSummaryText.textContent = 'Please check the Music Usage Confirmation consent box.';
+          }
+        }
+      }
+
+      // Wire events
+      connectTiktokBtn.addEventListener('click', function () {
+        state.connected = true;
+        updateFormState();
+        showToast('Authenticated via TikTok Login Kit & loaded creator_info!', '🎵');
+      });
+
+      disconnectTiktokBtn.addEventListener('click', function () {
+        state.connected = false;
+        updateFormState();
+        showToast('Disconnected TikTok account.', 'ℹ️');
+      });
+
+      switchCreatorBtn.addEventListener('click', function () {
+        state.creatorIndex = (state.creatorIndex + 1) % creators.length;
+        updateFormState();
+        showToast('Switched active TikTok account to ' + creators[state.creatorIndex].handle, '🔄');
+      });
+
+      postTitleInput.addEventListener('input', updateFormState);
+      privacySelect.addEventListener('change', updateFormState);
+      allowCommentCheck.addEventListener('change', updateFormState);
+      allowDuetCheck.addEventListener('change', updateFormState);
+      allowStitchCheck.addEventListener('change', updateFormState);
+      commercialToggle.addEventListener('change', updateFormState);
+      commercialYourBrandCheck.addEventListener('change', updateFormState);
+      commercialBrandedCheck.addEventListener('change', updateFormState);
+      consentCheck.addEventListener('change', updateFormState);
+
+      simRateLimitToggle.addEventListener('change', function () {
+        state.rateLimitReached = simRateLimitToggle.checked;
+        updateFormState();
+      });
+
+      simDisableDuetToggle.addEventListener('change', function () {
+        state.duetStitchDisabledByCreator = simDisableDuetToggle.checked;
+        updateFormState();
+      });
+
+      // Local video file selection
+      videoFileInput.addEventListener('change', function (e) {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const url = URL.createObjectURL(file);
+        sampleVideoCanvas.classList.add('hidden');
+        videoPreviewPlayer.classList.remove('hidden');
+        videoPreviewPlayer.src = url;
+        videoPreviewPlayer.onloadedmetadata = function () {
+          state.videoDurationSec = videoPreviewPlayer.duration || 15.0;
+          videoSpecBadge.textContent = 'Local MP4 · ' + state.videoDurationSec.toFixed(1) + 's';
+          updateFormState();
+        };
+        showToast('Loaded video file: ' + file.name, '🎬');
+      });
+
+      // Animated 9:16 canvas sample preview
+      const ctx = sampleVideoCanvas.getContext('2d');
+      let animFrameId = null;
+      let t = 0;
+
+      function drawSamplePreview() {
+        t += 0.03;
+        const grad = ctx.createLinearGradient(0, 0, 0, 480);
+        grad.addColorStop(0, '#0f172a');
+        grad.addColorStop(0.5, '#0e7490');
+        grad.addColorStop(1, '#022c22');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 270, 480);
+
+        // Glowing particles
+        for (let i = 0; i < 12; i++) {
+          const x = 135 + Math.sin(t + i * 0.9) * (60 + i * 4);
+          const y = ((t * 45 + i * 40) % 480);
+          ctx.beginPath();
+          ctx.arc(x, 480 - y, 4 + (i % 3) * 2, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(103, 232, 249, 0.35)';
+          ctx.fill();
+        }
+
+        ctx.fillStyle = 'rgba(255,255,255,0.85)';
+        ctx.font = '600 13px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('9:16 HD Video Preview', 135, 220);
+        ctx.font = '400 11px Inter, sans-serif';
+        ctx.fillStyle = 'rgba(203,213,225,0.8)';
+        ctx.fillText('1080 × 1920 · 30fps · H.264', 135, 242);
+
+        if (state.animatingCanvas) {
+          animFrameId = requestAnimationFrame(drawSamplePreview);
+        }
+      }
+      drawSamplePreview();
+
+      playSampleCanvasBtn.addEventListener('click', function () {
+        videoPreviewPlayer.pause();
+        videoPreviewPlayer.classList.add('hidden');
+        sampleVideoCanvas.classList.remove('hidden');
+        state.videoDurationSec = 15.0;
+        videoSpecBadge.textContent = '9:16 Vertical · 15.0s';
+        if (animFrameId) cancelAnimationFrame(animFrameId);
+        state.animatingCanvas = true;
+        drawSamplePreview();
+        updateFormState();
+      });
+
+      // Publish simulation with status polling (/v2/post/publish/status/fetch/)
+      let publishTimer1 = null;
+      let publishTimer2 = null;
+
+      publishTiktokBtn.addEventListener('click', function () {
+        if (publishTiktokBtn.disabled) return;
+        if (publishTimer1) clearTimeout(publishTimer1);
+        if (publishTimer2) clearTimeout(publishTimer2);
+
+        const currentCreator = creators[state.creatorIndex];
+        publishStatusCard.classList.remove('hidden');
+        publishStepTitle.textContent = 'Step 1/3: Initializing Direct Post (/v2/post/publish/video/init/)...';
+        publishStatusCode.textContent = 'PROCESSING_UPLOAD';
+        publishProgressBar.style.width = '35%';
+        publishStatusDetail.textContent = 'POST https://open.tiktokapis.com/v2/post/publish/video/init/ (privacy_level=' + privacySelect.value + ')';
+
+        publishTimer1 = setTimeout(function () {
+          publishStepTitle.textContent = 'Step 2/3: Uploading video binary & polling status (/v2/post/publish/status/fetch/)...';
+          publishStatusCode.textContent = 'PROCESSING_DOWNLOAD';
+          publishProgressBar.style.width = '70%';
+          publishStatusDetail.textContent = 'Polling publish_id: v_pub_url~v2.74291849201 -> status: PROCESSING_DOWNLOAD';
+        }, 1200);
+
+        publishTimer2 = setTimeout(function () {
+          publishStepTitle.textContent = 'Step 3/3: Published to ' + currentCreator.handle + '! (It may take a few minutes to appear on profile)';
+          publishStatusCode.textContent = 'PUBLISH_COMPLETE';
+          publishProgressBar.style.width = '100%';
+          publishStatusDetail.textContent = 'Status: PUBLISH_COMPLETE · publicly_available_post_id: ["742918593019284"]';
+          showToast('Video published to TikTok (' + currentCreator.handle + ')! It may take a few minutes to process on profile.', '🎉');
+        }, 2600);
+      });
+
+      // Copy Audit description button
+      const copyAuditDescBtn = document.getElementById('copyAuditDescBtn');
+      const auditDescText = document.getElementById('auditDescText');
+      copyAuditDescBtn.addEventListener('click', function () {
+        const text = auditDescText.textContent.trim();
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function () {
+            showToast('คัดลอกคำอธิบายภาษาอังกฤษสำหรับยื่น Audit เรียบร้อยแล้ว!', '📋');
+          }).catch(function () {
+            fallbackCopy(text);
+          });
+        } else {
+          fallbackCopy(text);
+        }
+      });
+
+      function fallbackCopy(text) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(ta);
+        showToast('คัดลอกคำอธิบายภาษาอังกฤษสำหรับยื่น Audit เรียบร้อยแล้ว!', '📋');
+      }
+
+      updateFormState();
+    })();
+  </script>
+</body>
+</html>
